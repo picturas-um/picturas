@@ -89,6 +89,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: "user"
       RABBITMQ_DEFAULT_PASS: "password"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
       test: ["CMD-SHELL", "rabbitmqctl status"]
       interval: 30s
@@ -106,6 +108,11 @@ services:
     command: mongod --port 27018
     ports:
         - '27018:27018'
+    healthcheck:
+      test: ["CMD", "mongo", "--host", "localhost", "--port", "27018", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - project_data:/data/db
 
@@ -113,17 +120,19 @@ services:
     build: ./projects
     container_name: picturas-projects-ms
     depends_on:
-      - projects_mongoDB
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+      projects_mongoDB:
+        condition: service_started
     ports:
       - "9002:9001"
     restart: on-failure
     environment:
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_USER=user
-      - RABBITMQ_PASS=password
-      - MINIO_DOMAIN=localhost:9000
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: user
+      RABBITMQ_PASS: password
+      MINIO_DOMAIN: minio:9000
     networks:
       - elk
     volumes:
@@ -136,6 +145,11 @@ services:
     command: mongod --port 27019
     ports:
         - '27019:27019'
+    healthcheck:
+      test: ["CMD", "mongo", "--host", "localhost", "--port", "27019", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - elk
     volumes:
@@ -164,6 +178,11 @@ services:
     restart: on-failure
     networks:
       - elk
+    healthcheck:
+      test: ["CMD", "mongo", "--host", "localhost", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - subscription_data:/data/db
 
@@ -200,16 +219,6 @@ services:
     volumes:
       - ./apiGateway:/app
       - /app/node_modules
-
-  # image-storage-service:
-  #   build: ./imageStorageService
-  #   container_name: picturas-image-storage-ms
-  #   ports:
-  #     - 3001:3000
-  #   networks:
-  #     - elk
-  #   volumes:
-  #     - ./imageStorageService/images:/usr/src/app/images
 
   bg_remove_ai_tool:
     build:
