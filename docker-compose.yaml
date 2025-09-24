@@ -1,36 +1,36 @@
 services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
-    environment:
-      - discovery.type=single-node
-    ports:
-      - 9200:9200
-    networks:
-      - elk
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:7.6.2
-    ports:
-      - "12201:12201/udp"
-    volumes:
-      - ./logstash.conf:/etc/logstash/logstash.conf
-    command: logstash -f /etc/logstash/logstash.conf
-    networks:
-      - elk
-    depends_on:
-      - elasticsearch
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.6.2
-    ports:
-      - 5601:5601
-    # volumes:
-    #   - ./kibana_data:/usr/share/kibana/data
-    networks:
-      - elk
-    depends_on:
-      - elasticsearch
-      - logstash
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+  #   environment:
+  #     - discovery.type=single-node
+  #   ports:
+  #     - 9200:9200
+  #   networks:
+  #     - elk
+  #
+  # logstash:
+  #   image: docker.elastic.co/logstash/logstash:7.6.2
+  #   ports:
+  #     - "12201:12201/udp"
+  #   volumes:
+  #     - ./logstash.conf:/etc/logstash/logstash.conf
+  #   command: logstash -f /etc/logstash/logstash.conf
+  #   networks:
+  #     - elk
+  #   depends_on:
+  #     - elasticsearch
+  #
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:7.6.2
+  #   ports:
+  #     - 5601:5601
+  #   # volumes:
+  #   #   - ./kibana_data:/usr/share/kibana/data
+  #   networks:
+  #     - elk
+  #   depends_on:
+  #     - elasticsearch
+  #     - logstash
 
   nginx:
     image: nginx:latest
