@@ -13,19 +13,8 @@ const ImagePreview = ({
     const createBlobUrlFromStream = async () => {
       if (file.stream) {
         const stream = file.stream();
-        const reader = stream.getReader();
-        const chunks: Uint8Array[] = [];
-        let done = false;
-
-        while (!done) {
-          const { value, done: streamDone } = await reader.read();
-          if (value) chunks.push(value);
-          done = streamDone;
-        }
-
-        const blob = new Blob(chunks, {
-          type: file.type || "application/octet-stream",
-        });
+        // Cria o blob diretamente do stream
+        const blob = await new Response(stream).blob();
         const url = URL.createObjectURL(blob);
         setBlobUrl(url);
 

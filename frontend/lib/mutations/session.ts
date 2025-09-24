@@ -15,14 +15,11 @@ export const useLogin = () => {
     onSuccess: (session) => {
       localStorage.setItem("session", JSON.stringify(session));
       qc.invalidateQueries({ refetchType: "all", queryKey: ["session"] });
-      qc.removeQueries({ queryKey: ["projects"], refetchType: "all" });
-      qc.removeQueries({ queryKey: ["project"], refetchType: "all" });
-      qc.removeQueries({ queryKey: ["projectImages"], refetchType: "all" });
-      qc.removeQueries({
-        queryKey: ["projectResults"],
-        refetchType: "all",
-      });
-      qc.removeQueries({ queryKey: ["socket"], refetchType: "all" });
+      qc.removeQueries({ queryKey: ["projects"] });
+      qc.removeQueries({ queryKey: ["project"] });
+      qc.removeQueries({ queryKey: ["projectImages"] });
+      qc.removeQueries({ queryKey: ["projectResults"] });
+      qc.removeQueries({ queryKey: ["socket"] });
     },
   });
 };
@@ -34,14 +31,13 @@ export const useRegister = () => {
     onSuccess: (session) => {
       localStorage.setItem("session", JSON.stringify(session));
       qc.invalidateQueries({ refetchType: "all", queryKey: ["session"] });
-      qc.removeQueries({ queryKey: ["projects"], refetchType: "all" });
-      qc.removeQueries({ queryKey: ["project"], refetchType: "all" });
-      qc.removeQueries({ queryKey: ["projectImages"], refetchType: "all" });
+      qc.removeQueries({ queryKey: ["projects"] });
+      qc.removeQueries({ queryKey: ["project"] });
+      qc.removeQueries({ queryKey: ["projectImages"] });
       qc.removeQueries({
-        queryKey: ["projectResults"],
-        refetchType: "all",
+        queryKey: ["projectResults"]
       });
-      qc.removeQueries({ queryKey: ["socket"], refetchType: "all" });
+      qc.removeQueries({ queryKey: ["socket"] });
     },
   });
 };
@@ -53,14 +49,11 @@ export const useLogout = () => {
     mutationFn: async () => localStorage.removeItem("session"),
     onSuccess: () => {
       register.mutate({ type: "anonymous" });
-      qc.removeQueries({ queryKey: ["projects"], refetchType: "all" });
-      qc.removeQueries({ queryKey: ["project"], refetchType: "all" });
-      qc.removeQueries({ queryKey: ["projectImages"], refetchType: "all" });
-      qc.removeQueries({
-        queryKey: ["projectResults"],
-        refetchType: "all",
-      });
-      qc.removeQueries({ queryKey: ["socket"], refetchType: "all" });
+      qc.removeQueries({ queryKey: ["projects"] });
+      qc.removeQueries({ queryKey: ["project"] });
+      qc.removeQueries({ queryKey: ["projectImages"] });
+      qc.removeQueries({ queryKey: ["projectResults"] });
+      qc.removeQueries({ queryKey: ["socket"] });
     },
   });
 };
