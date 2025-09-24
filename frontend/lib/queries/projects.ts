@@ -39,7 +39,7 @@ export const useGetSocket = (token: string) => {
   return useQuery({
     queryKey: ["socket", token],
     queryFn: () =>
-      io("https://a.primecog.com", {
+      io("http://localhost:8080", {
         auth: {
           token: token,
         },
